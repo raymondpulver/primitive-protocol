@@ -14,6 +14,8 @@ const CTokenLike = require("@primitivefi/contracts/artifacts/CTokenLike");
 const UniswapTrader = require("@primitivefi/contracts/artifacts/UniswapTrader");
 const OptionTemplateLib = require("@primitivefi/contracts/artifacts/OptionTemplateLib");
 const RedeemTemplateLib = require("@primitivefi/contracts/artifacts/RedeemTemplateLib");
+const OverTheCounterOption = require("@primitivefi/contracts/artifacts/OverTheCounterOption");
+const OtcFactory = require("@primitivefi/contracts/artifacts/OtcFactory");
 const constants = require("./constants");
 const { MILLION_ETHER } = constants.VALUES;
 const { OPTION_TEMPLATE_LIB, REDEEM_TEMPLATE_LIB } = constants.LIBRARIES;
@@ -272,7 +274,32 @@ const newUniswapRinkeby = async (signer) => {
     return { uniswapRouter, uniswapFactory };
 };
 
+const newOtc = async (signer, underlyingToken, quoteToken) => {
+    const registry = await newRegistry(signer);
+    await registry.addSupported(underlyingToken.address);
+    await registry.addSupported(quoteToken.address);
+    await newOptionFactory(signer, registry);
+    const otcFactory = await deployContract(signer, OtcFactory, [], {
+        gasLimit: 6000000,
+    });
+
+    await otcFactory.setRegistry(registry.address);
+    await otcFactory.setQuoteToken(quoteToken.address);
+    return otcFactory;
+};
+
+const newOtcOption = async (signer, otcAddress) => {
+    const otc = new ethers.Contract(
+        otcAddress,
+        OverTheCounterOption.abi,
+        signer
+    );
+    return otc;
+};
+
 Object.assign(module.exports, {
+    newOtc,
+    newOtcOption,
     newUniswapTrader,
     newUniswap,
     newUniswapRinkeby,
