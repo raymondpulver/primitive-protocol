@@ -6,6 +6,7 @@ const {
 } = require("@primitivefi/contracts/test/lib/constants");
 const {
     REGISTRY,
+    OTC_FACTORY,
     TRADER,
     OPTION_FACTORY,
     REDEEM_FACTORY,
@@ -19,11 +20,20 @@ const OptionFactory = require("@primitivefi/contracts/deployments/rinkeby/Option
 const RedeemFactory = require("@primitivefi/contracts/deployments/rinkeby/RedeemFactory");
 const OptionTemplateLib = require("@primitivefi/contracts/deployments/rinkeby/OptionTemplateLib");
 const RedeemTemplateLib = require("@primitivefi/contracts/deployments/rinkeby/RedeemTemplateLib");
+const OtcFactory = require("@primitivefi/contracts/deployments/rinkeby/OtcFactory");
 const { getContractAt } = bre.ethers;
 
 const verifyRegistry = async () => {
     try {
         await verifyContract(REGISTRY, Registry.address, Registry.args, {});
+    } catch (err) {
+        console.error(err);
+    }
+};
+
+const verifyOtcFactory = async () => {
+    try {
+        await verifyContract(REGISTRY, OtcFactory.address, OtcFactory.args, {});
     } catch (err) {
         console.error(err);
     }

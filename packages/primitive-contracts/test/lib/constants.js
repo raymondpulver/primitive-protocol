@@ -80,6 +80,7 @@ const CONTRACT_NAMES = {
         "contracts/option/applications/factories/RedeemFactory.sol:RedeemFactory",
     OPTION: "contracts/option/primitives/Option.sol:Option",
     REDEEM: "contracts/option/primitives/Redeem.sol:Redeem",
+    OTC_FACTORY: "contracts/otc/OtcFactory.sol:OtcFactory",
 };
 
 module.exports = {
